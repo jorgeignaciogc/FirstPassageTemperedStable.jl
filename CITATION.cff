@@ -1,0 +1,16 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: "González Cázares"
+  given-names: "Jorge"
+  orcid: "https://orcid.org/0000-0002-6949-3566"
+- family-names: "Lin"
+  given-names: "Feng"
+  family-names: "Mijatovi\'c"
+  given-names: "Aleksandar"
+  orcid: "https://orcid.org/0000-0003-0531-3551"
+title: "FirstPassageTemperedStable.jl"
+version: 1.0.0
+doi: 10.5281/zenodo.1234
+date-released: 2023-03-14
+url: "https://github.com/jorgeignaciogc/FirstPassageTemperedStable.jl"
