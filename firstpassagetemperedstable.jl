@@ -83,7 +83,6 @@ function Ψaux(a::Real, x::Real)
     else# C4 == Cmin
         return (4, erf(sqax*sqrt(pi)/2)*exp(x)*gcax/(C4*sqax))
     end
-    return (i,c)
 end
 
 # Standardised PDF of S(1/θ)
@@ -596,58 +595,7 @@ function rand_stable(α::Real, θ::Real, t::Real)
     return (θ*t)^(1/α) * (σ(α, rand()) / rand(Exponential()))^((1-α)/α)
 end
 
-# Sample of S(t)|{S(t)≤s} under ℙ_0
-function rand_small_stable(α::Real, θ::Real, t::Real, s::Real)
-    s1 = (θ * t / s^α)^(1/(1-α))
-    aux0 = σ(α,0)
-    f(x) = exp(s1 * ( aux0 - σ(α, x)))
-    aux = log(4) / s1 + aux0
-    a1 = 1/2
-    while σ(α, a1) > aux
-        a1 /= 2
-    end
-    a2 = f(a1)
-    U = 0
-
-    if a1 == 1/2
-        a4 = 1 / (1 + a2)
-        while true
-            V = rand(3)
-            U = V[2] < a4 ? a1 * V[1] : a1 * (1+V[1])
-            if V[3] < f(U) / (U < a1 ? 1 : a2)
-                break
-            end
-        end
-    else
-        a3 = f(2*a1)
-        a4 = 1 / (1 + a2 + a3 / log(a2/a3))
-        while true
-            V = rand(3)
-            U = V[2] < a4 ? a1 * V[1] : (V[2] < a4 * (1+a2) ? a1 * (1+V[1]) : a1 * (2 + log(1/V[1])/log(a2/a3)))
-            if U < 1 
-                if V[3] < f(U) / (U < a1 ? 1 : (U < 2*a1 ? a2 : exp(((2*a1-U)*log(a2) + (U-a1)*log(a3))/a1)))
-                    break
-                end
-            end
-        end
-    end
-
-    return (θ*t)^(1/α) * (rand(Exponential()) / σ(α, U) + s1)^(-(1-α)/α)
-end
-
-# Sample of S(t)|{S(t)≤s} under ℙ_q
-function rand_small_tempered_stable(α::Real, θ::Real, q::Real, t::Real, s::Real)
-    if 1/2 > exp(-q*s) # = 𝔼_q[exp(q(S(t)-s))] ≥ ℙ_q(S(t)>s) ⟹ ℙ_q(S(t)<s) > 1/2
-        while (x = rand_tempered_stable(α, θ, q, t)) > s end
-        return x
-    else # exp(-qs) ≥ 1/2
-        while (x = rand_small_stable(α, θ, t, s)) > -log(rand())/q end
-        # Acceptance probability ≥ exp(-qs) ≥ 1/2
-        return x
-    end
-end
-
-# Sample of S(t) under ℙ
+# Sample of S(t) under ℙ_q
 function rand_tempered_stable(α::Real, θ::Real, q::Real, t::Real)
     λ = (θ*t)^(1/α)*q
     ξ = λ^α
@@ -703,6 +651,57 @@ function rand_tempered_stable(α::Real, θ::Real, q::Real, t::Real)
                 return (θ*t)^(1/α)*s
             end
         end
+    end
+end
+
+# Sample of S(t)|{S(t)≤s} under ℙ_0
+function rand_small_stable(α::Real, θ::Real, t::Real, s::Real)
+    s1 = (θ * t / s^α)^(1/(1-α))
+    aux0 = σ(α,0)
+    f(x) = exp(s1 * ( aux0 - σ(α, x)))
+    aux = log(4) / s1 + aux0
+    a1 = 1/2
+    while σ(α, a1) > aux
+        a1 /= 2
+    end
+    a2 = f(a1)
+    U = 0
+
+    if a1 == 1/2
+        a4 = 1 / (1 + a2)
+        while true
+            V = rand(3)
+            U = V[2] < a4 ? a1 * V[1] : a1 * (1+V[1])
+            if V[3] < f(U) / (U < a1 ? 1 : a2)
+                break
+            end
+        end
+    else
+        a3 = f(2*a1)
+        a4 = 1 / (1 + a2 + a3 / log(a2/a3))
+        while true
+            V = rand(3)
+            U = V[2] < a4 ? a1 * V[1] : (V[2] < a4 * (1+a2) ? a1 * (1+V[1]) : a1 * (2 + log(1/V[1])/log(a2/a3)))
+            if U < 1 
+                if V[3] < f(U) / (U < a1 ? 1 : (U < 2*a1 ? a2 : exp(((2*a1-U)*log(a2) + (U-a1)*log(a3))/a1)))
+                    break
+                end
+            end
+        end
+    end
+
+    return (θ*t)^(1/α) * (rand(Exponential()) / σ(α, U) + s1)^(-(1-α)/α)
+end
+
+# Sample of S(t)|{S(t)≤s} under ℙ_q
+function rand_small_tempered_stable(α::Real, θ::Real, q::Real, t::Real, s::Real)
+    if 1/2 > max(exp(-q*s),exp(-q^α*θ*t)) # p > exp(q^α θ t-qs) = 𝔼_q[exp(q(S(t)-s))] ≥ ℙ_q[S(t)>s] ⟹ ℙ_q[S(t)<s] > 1-p
+        while (x = rand_tempered_stable(α, θ, q, t)) > s end
+        return x
+    else # max(exp(-q*s),exp(-q^α*θ*t)) > 1/2, recall that p > exp(q^α θ t-qs) = 𝔼_q[exp(q(S(t)-s))] ≥ ℙ_q[S(t)>s] ⟹ ℙ_q[S(t)<s] > 1-p
+        while (x = rand_small_stable(α, θ, t, s)) > -log(rand())/q end
+        # Acceptance probability = ℙ_0[S(t)< E/q | S(t)<s] ≥ max(exp(-qs), exp(-q^α θ t)) ≥ 1/2
+        return x
     end
 end
 
@@ -778,7 +777,7 @@ function rand_crossing_small_stable(α::Real, θ::Real, b::Function, Db::Functio
     return (t, U, (b(t)-U) * rand()^(-1/α))
 end
 
-# Sample of the vector (t, S(t-), S(t)-S(t-)) under ℙ where: 
+# Sample of the vector (t, S(t-), S(t)-S(t-)) under ℙ_q where: 
 # t is the crossing time across the boundary b
 # b is the target/boundary function
 # Db is the derivative of b
@@ -795,7 +794,7 @@ function rand_crossing_tempered_stable(α::Real, θ::Real, q::Real, b::Function,
     locB = BB(Tf,Uf)
 
     (T,U,V) = rand_crossing_small_stable(α,θ,locb,locDb,locB,Tmax)
-    S = rand_tempered_stable(α,θ,q,Tmax-T)
+    S = rand_stable(α,θ,Tmax-T)
     while q*(S+U+V) > -log(rand()) 
         (T, U, V) = rand_crossing_small_stable(α,θ,locb,locDb,locB,Tmax)
         S = rand_stable(α,θ,Tmax-T)
@@ -803,7 +802,7 @@ function rand_crossing_tempered_stable(α::Real, θ::Real, q::Real, b::Function,
     return (Tf+T, Uf+U, V)
 end
 
-# Sample of the vector (t, S(t-), S(t)-S(t-)) under ℙ where: 
+# Sample of the vector (t, S(t-), S(t)-S(t-)) under ℙ_q where: 
 # t is the crossing time across the boundary b
 # b : t ↦ min(a0 - a1*t, r) is the target/boundary function
 function rand_crossing_tempered_stable(α::Real, θ::Real, q::Real, a0::Real, a1::Real, r::Real)
