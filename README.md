@@ -11,7 +11,7 @@ rand_stable(α::Real, θ::Real, t::Real)
 
 * The following function produces a sample of $S_t$ under $\mathbb{P}_q$ (i.e. a tempered stable increment or marginal):
 ```julia
-function rand_tempered_stable(α::Real, θ::Real, q::Real, t::Real)
+rand_tempered_stable(α::Real, θ::Real, q::Real, t::Real)
 ```
 
 * The following function produces a sample of $S_t|\\{S_t\le s\\}$ under $\mathbb{P}_0$:
