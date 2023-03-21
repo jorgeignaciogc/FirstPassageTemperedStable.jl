@@ -24,7 +24,7 @@ rand_small_stable(α::Real, θ::Real, t::Real, s::Real)
 rand_small_tempered_stable(α::Real, θ::Real, q::Real, t::Real, s::Real)
 ```
 
-* The following function produces a sample of $S_{\tau-}|\\{S_{\tau-}<S_{\tau}\\} under $\mathbb{P}_{0}$ where $\tau$ is the crossing time and $s = b(\tau)$ is the crossing level 
+* The following function produces a sample of the undershoot $S_{\tau-}|\\{S_{\tau-} < S_{\tau}\\} under $\mathbb{P}_{0}$ where $\tau$ is the crossing time and $s = b(\tau)$ is the crossing level 
 ```julia
 rand_undershoot_stable(α::Real, θ::Real, t::Real, s::Real)
 ```
