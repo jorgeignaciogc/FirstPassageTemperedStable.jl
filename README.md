@@ -44,7 +44,7 @@ rand_crossing_small_stable(α::Real, θ::Real, b::Function, Db::Function, B::Fun
 rand_crossing_tempered_stable(α::Real, θ::Real, q::Real, a0::Real, a1::Real, r::Real)
 ```
 
-* The following function produces a sample of the vector $(\tau,Z_{\tau-},Z_{\tau}-Z_{\tau-})$ where $Z = Z^+-Z^-$ is the difference of two tempered stable subordinators, $\tau = \min\\{\tau_0,T\\}$ where $\tau_0$ is the crossing time $\tau_0=\inf\\{t>0:Z_t>r\\}$ across level `r`, $Z^+$ has parameters $(\alpha_1,\theta_1,q_1)$ and $Z^-$ has parameters $(\alpha_2,\theta_2,q_2)$:
+* The following function produces a sample of the vector $(\tau,Z_{\tau-},Z_{\tau}-Z_{\tau-})$ where $Z = Z^+-Z^-$ is the difference of two tempered stable subordinators, $\tau = \min\\{\tau_0,T\\}$ where $\tau_0$ is the crossing time $\tau_0=\inf\\{t>0:Z_t>r\\}$ across level $r$, $Z^+$ has parameters $(\alpha_1,\theta_1,q_1)$ and $Z^-$ has parameters $(\alpha_2,\theta_2,q_2)$:
 ```julia
 rand_crossing_BV(α1::Real, θ1::Real, q1::Real, α2::Real, θ2::Real, q2::Real, T::Real, r::Real)
 ```
