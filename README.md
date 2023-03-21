@@ -24,17 +24,17 @@ rand_small_stable(α::Real, θ::Real, t::Real, s::Real)
 rand_small_tempered_stable(α::Real, θ::Real, q::Real, t::Real, s::Real)
 ```
 
-* The following function produces a sample of the undershoot $S_{\tau-}|\\{S_{\tau-} < S_{\tau}\\} under $\mathbb{P}_{0}$ where $\tau$ is the crossing time and $s = b(\tau)$ is the crossing level 
+* The following function produces a sample of the undershoot $S_{\tau-}|\\{S_{\tau-} < S_{\tau}\\}$ under $\mathbb{P}_{0}$ where $\tau$ is the crossing time and $s = b(\tau)$ is the crossing level 
 ```julia
 rand_undershoot_stable(α::Real, θ::Real, t::Real, s::Real)
 ```
 
-* The following function produces a sample of the vector $(\tau, S_{\tau-}, S_{\tau}-S_{\tau-})$ under $\mathbb{P}_0$ where $\tau$ is the crossing time across the boundary $b$, `b` is the boundary function $b$, `Db` is the derivative of `b` and `B` is the inverse function of $t \mapsto t^(-1/\alpha)b(t)$: 
+* The following function produces a sample of the vector $(\tau, S_{\tau-}, S_{\tau}-S_{\tau-})$ under $\mathbb{P}_0$ where $\tau$ is the crossing time across the boundary $b$, `b` is the boundary function $b$, `Db` is the derivative of `b` and `B` is the inverse function of $t \mapsto t^{-1/\alpha}b(t)$: 
 ```julia 
 rand_crossing_stable(α::Real, θ::Real, b::Function, Db::Function, B::Function)
 ```
 
-* The following function produces a sample of the vector $(\tau, S_{\tau-}, S_{\tau}-S_{\tau-})|\\{t\le T\\}$ under $\mathbb{P}_0$ where $\tau$ is the crossing time across the boundary $b$, `T` is some positive number, `b` is the boundary function $b$, `Db` is the derivative of `b` and `B` is the inverse function of $t \mapsto t^(-1/\alpha)b(t)$:
+* The following function produces a sample of the vector $(\tau, S_{\tau-}, S_{\tau}-S_{\tau-})|\\{t\le T\\}$ under $\mathbb{P}_0$ where $\tau$ is the crossing time across the boundary $b$, `T` is some positive number, `b` is the boundary function $b$, `Db` is the derivative of `b` and `B` is the inverse function of $t \mapsto t^{-1/\alpha}b(t)$:
 ```julia
 rand_crossing_small_stable(α::Real, θ::Real, b::Function, Db::Function, B::Function, T::Real)
 ```
