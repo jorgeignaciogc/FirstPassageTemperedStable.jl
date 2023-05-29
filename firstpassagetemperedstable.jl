@@ -116,7 +116,7 @@ function CDF_undershoot(α::Real, θ::Real, t::Real, b::Real, x::Real)
 end
 
 function CDF_undershoot(α::Real, θ::Real, t::Real, b::Real, x::Real, gj_x::Array{<:Real}, gj_w::Array{<:Real})
-    return return 1 - sum(gj_w .* g.(α, θ, t, (gj_x .+ 1) .* (b/2)) .* (gj_x .> (2*x/b-1))) * (2/b)^(α-1) * θ * t * α / (gamma(1-α) * g(α,θ,t,b))
+    return 1 - sum(gj_w .* g.(α, θ, t, (gj_x .+ 1) .* (b/2)) .* (gj_x .> (2*x/b-1))) * (2/b)^(α-1) * θ * t * α / (gamma(1-α) * g(α,θ,t,b))
 end
 
 # f = logconcave density on [0,1], with mode at 0 and f(0) = 1
